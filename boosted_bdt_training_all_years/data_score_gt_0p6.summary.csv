@@ -1,0 +1,2 @@
+sample_kind,model,n_features,score_cut,n_input,n_score_gt_cut,score_column
+data,old,28,0.6,15626,29,bdt_score_mean5

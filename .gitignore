@@ -1,0 +1,26 @@
+__pycache__/
+.ipynb_checkpoints/
+.agents/
+.codex/
+.git/
+.git_boosted_hhtobbgg/
+
+# Large/generated analysis inputs and outputs
+*.pkl
+*.parquet
+*.root
+*.h5
+
+output_parquet/
+data/
+data_ref_test/
+
+boosted_bdt_training_all_years/*.parquet
+boosted_bdt_training_all_years/xgb_models/
+boosted_bdt_training_all_years/xgb_ref_models/
+boosted_bdt_training_all_years/sculpting_old_model_qcd/
+boosted_bdt_training_all_years/sculpting_old_model_qcd*/
+
+# Local scratch/logs
+*.log
+tmp/
