@@ -1,2 +1,0 @@
-sample_kind,model,n_features,score_cut,n_input,n_after_common_cut,n_score_gt_cut,score_column
-data,ref,31,0.6,15626,1220,40,bdt_ref_score_mean5

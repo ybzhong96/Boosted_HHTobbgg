@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 import vector
-from BDT_preprocess_ref import FEATURES as REF_FEATURES
+from BDT_preprocess import features as TRAINING_FEATURES
 from pandas.errors import PerformanceWarning
 
 
@@ -16,7 +16,7 @@ DEFAULT_OUTPUT_DIR = Path("data")
 warnings.simplefilter("ignore", PerformanceWarning)
 
 DERIVED_COLUMNS_FOR_EMPTY_OUTPUT = [
-    *REF_FEATURES,
+    *TRAINING_FEATURES,
     "fatjet_selected_globalParT3_XbbVsQCD",
     "fatjet_selected_regmass",
     "fatjet_selected_tau21",

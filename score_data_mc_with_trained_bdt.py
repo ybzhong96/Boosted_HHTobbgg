@@ -6,27 +6,15 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 
-from BDT_preprocess_ref import FEATURES as REF_BDT_VARIABLES
 from train_boosted_bdt_all_years import BDT_VARIABLES, infer_process, infer_year, process_type
 
 
 DATA_DIR = Path("data")
 MC_DIR = Path("output_parquet")
 SCORE_CUT = 0.6
-MODEL_CONFIGS = {
-    "old": {
-        "model_pattern": "boosted_bdt_training_all_years/xgb_models/xgb_fold*.json",
-        "features": BDT_VARIABLES,
-        "output_file": Path("boosted_bdt_training_all_years/data_score_gt_0p6.parquet"),
-        "score_column": "bdt_score_mean5",
-    },
-    "ref": {
-        "model_pattern": "boosted_bdt_training_all_years/xgb_ref_models/xgb_ref_fold*.json",
-        "features": REF_BDT_VARIABLES,
-        "output_file": Path("boosted_bdt_training_all_years/data_ref_score_gt_0p6.parquet"),
-        "score_column": "bdt_ref_score_mean5",
-    },
-}
+MODEL_PATTERN = "boosted_bdt_training_all_years/xgb_models/xgb_fold*.json"
+OUTPUT_FILE = Path("boosted_bdt_training_all_years/data_score_gt_0p6.parquet")
+SCORE_COLUMN = "bdt_score_mean5"
 
 
 def apply_common_boosted_cut(df):
@@ -126,8 +114,7 @@ def score_files(files, models, annotator, label, bdt_variables, score_column):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Score boosted data with trained old/ref BDT models.")
-    parser.add_argument("--model", choices=MODEL_CONFIGS, default="old")
+    parser = argparse.ArgumentParser(description="Score boosted data with the trained old BDT model.")
     parser.add_argument("--score-cut", type=float, default=SCORE_CUT)
     parser.add_argument("--output-file", default=None)
     return parser.parse_args()
@@ -135,22 +122,20 @@ def parse_args():
 
 def main():
     args = parse_args()
-    config = MODEL_CONFIGS[args.model]
-    models = load_xgb_models(config["model_pattern"])
+    models = load_xgb_models(MODEL_PATTERN)
     data_files = sorted(DATA_DIR.glob("Run*/*_Boost.parquet"))
 
     global SCORE_CUT
     SCORE_CUT = args.score_cut
-    output_file = Path(args.output_file) if args.output_file else config["output_file"]
-    score_column = config["score_column"]
+    output_file = Path(args.output_file) if args.output_file else OUTPUT_FILE
 
     data_selected, data_total, data_keep = score_files(
         data_files,
         models,
         annotate_data,
-        f"data/{args.model}",
-        config["features"],
-        score_column,
+        "data/old",
+        BDT_VARIABLES,
+        SCORE_COLUMN,
     )
 
     if not data_selected:
@@ -164,12 +149,12 @@ def main():
         [
             {
                 "sample_kind": "data",
-                "model": args.model,
-                "n_features": len(config["features"]),
+                "model": "old",
+                "n_features": len(BDT_VARIABLES),
                 "score_cut": SCORE_CUT,
                 "n_input": data_total,
                 "n_score_gt_cut": data_keep,
-                "score_column": score_column,
+                "score_column": SCORE_COLUMN,
             },
         ]
     )

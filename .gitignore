@@ -15,7 +15,13 @@ output_parquet/
 data/
 data_ref_test/
 
+# Keep ref/local outputs out of the public repo.
+BDT_preprocess_ref.py
+train_boosted_bdt_ref_all_years.py
+
 boosted_bdt_training_all_years/*.parquet
+boosted_bdt_training_all_years/*.summary.csv
+boosted_bdt_training_all_years/*summary.csv
 boosted_bdt_training_all_years/xgb_models/
 boosted_bdt_training_all_years/xgb_ref_models/
 boosted_bdt_training_all_years/sculpting_old_model_qcd/

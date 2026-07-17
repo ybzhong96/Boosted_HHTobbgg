@@ -6,8 +6,6 @@ import numpy as np
 import pandas as pd
 import vector
 
-from BDT_preprocess_ref import add_reference_features, write_features_list
-
 
 features = [
     "lead_eta",
@@ -46,6 +44,12 @@ features = [
 
 def wrap_angle(angle):
     return (angle + np.pi) % (2 * np.pi) - np.pi
+
+
+def write_features_list(output_dir):
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "features_list.txt").write_text("\n".join(features) + "\n")
 
 
 def process_file(file_path):
@@ -146,8 +150,6 @@ def process_file(file_path):
     df.loc[:, "mass_HH"] = (vec1 + vec2).mass
     df.loc[:, "pt_HH"] = (vec1 + vec2).pt
     df.loc[:, "eta_HH"] = (vec1 + vec2).eta
-
-    df = add_reference_features(df)
 
     output_dir = file_path.parent / "output_parquet"
     output_dir.mkdir(exist_ok=True)
